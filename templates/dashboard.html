@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard | 4in Sight</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/logo.png') }}"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="Logo"
+        />
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="{{ url_for('dashboard') }}" class="nav-item active">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+              />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('halaman_grade') }}" class="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('about') }}" class="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>About</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="{{ url_for('logout_route') }}"
+            class="nav-item"
+            style="color: var(--error)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <p>&copy; 2025 4in Sight</p>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="welcome-section fade-in">
+        <h1>
+          Hello,
+          <span class="bg-gradient-text">{{ current_user.nama }}</span> 👋
+        </h1>
+        <p class="text-muted">
+          Welcome back to your academic dashboard. Here's your overview.
+        </p>
+      </div>
+
+      <!-- Flash Messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }} fade-in">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card fade-in fade-in-delay-1">
+          <div
+            style="
+              background: rgba(59, 130, 246, 0.1);
+              padding: 12px;
+              border-radius: 50%;
+              margin-bottom: 12px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="var(--primary)"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18 18.247 17.547 16.5 17.547c-1.747 0-3.332.477-4.5 1.253"
+              />
+            </svg>
+          </div>
+          <div class="stat-value">{{ ipk }}</div>
+          <div class="stat-label">IPK (GPA)</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-2">
+          <div
+            style="
+              background: rgba(16, 185, 129, 0.1);
+              padding: 12px;
+              border-radius: 50%;
+              margin-bottom: 12px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="var(--success)"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </div>
+          <div class="stat-value">{{ total_sks }}</div>
+          <div class="stat-label">Total SKS</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-3">
+          <div
+            style="
+              background: rgba(245, 158, 11, 0.1);
+              padding: 12px;
+              border-radius: 50%;
+              margin-bottom: 12px;
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="var(--warning)"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+              />
+            </svg>
+          </div>
+          <div class="stat-value">{{ semester_summary|length }}</div>
+          <div class="stat-label">Semesters</div>
+        </div>
+      </div>
+
+      <!-- Charts Section - Row 1 -->
+      <div
+        class="stats-grid"
+        style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px"
+      >
+        <!-- Chart 1: Grade Distribution (Doughnut) -->
+        <div class="card">
+          <div
+            class="card-header"
+            style="
+              border-bottom: 1px solid var(--border-color);
+              padding-bottom: 12px;
+              margin-bottom: 16px;
+            "
+          >
+            <h3
+              class="card-title"
+              style="margin: 0; display: flex; align-items: center; gap: 8px"
+            >
+              <span
+                style="
+                  background: rgba(16, 185, 129, 0.1);
+                  padding: 6px;
+                  border-radius: 6px;
+                  display: flex;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#10b981"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+                  />
+                </svg>
+              </span>
+              Grade Distribution
+            </h3>
+            <span class="badge badge-success">Overview</span>
+          </div>
+          <div style="position: relative; height: 280px">
+            <canvas id="gradeDistChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: GPA Progress (Line) -->
+        <div class="card">
+          <div
+            class="card-header"
+            style="
+              border-bottom: 1px solid var(--border-color);
+              padding-bottom: 12px;
+              margin-bottom: 16px;
+            "
+          >
+            <h3
+              class="card-title"
+              style="margin: 0; display: flex; align-items: center; gap: 8px"
+            >
+              <span
+                style="
+                  background: rgba(59, 130, 246, 0.1);
+                  padding: 6px;
+                  border-radius: 6px;
+                  display: flex;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#3b82f6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                  />
+                </svg>
+              </span>
+              GPA Progress
+            </h3>
+            <span class="badge badge-info">Trend</span>
+          </div>
+          <div style="position: relative; height: 280px">
+            <canvas id="gpaProgressChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section - Row 2 -->
+      <div
+        class="stats-grid"
+        style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px"
+      >
+        <!-- Chart 3: SKS per Semester (Bar) -->
+        <div class="card">
+          <div
+            class="card-header"
+            style="
+              border-bottom: 1px solid var(--border-color);
+              padding-bottom: 12px;
+              margin-bottom: 16px;
+            "
+          >
+            <h3
+              class="card-title"
+              style="margin: 0; display: flex; align-items: center; gap: 8px"
+            >
+              <span
+                style="
+                  background: rgba(245, 158, 11, 0.1);
+                  padding: 6px;
+                  border-radius: 6px;
+                  display: flex;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#f59e0b"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </span>
+              SKS per Semester
+            </h3>
+            <span class="badge badge-warning">Credits</span>
+          </div>
+          <div style="position: relative; height: 280px">
+            <canvas id="sksBarChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Courses per Semester (Line) -->
+        <div class="card">
+          <div
+            class="card-header"
+            style="
+              border-bottom: 1px solid var(--border-color);
+              padding-bottom: 12px;
+              margin-bottom: 16px;
+            "
+          >
+            <h3
+              class="card-title"
+              style="margin: 0; display: flex; align-items: center; gap: 8px"
+            >
+              <span
+                style="
+                  background: rgba(139, 92, 246, 0.1);
+                  padding: 6px;
+                  border-radius: 6px;
+                  display: flex;
+                "
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#8b5cf6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.747 0-3.332.477-4.5 1.253"
+                  />
+                </svg>
+              </span>
+              Courses per Semester
+            </h3>
+            <span
+              class="badge"
+              style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6"
+              >Workload</span
+            >
+          </div>
+          <div style="position: relative; height: 280px">
+            <canvas id="coursesLineChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Semester Summary -->
+      <div class="card fade-in fade-in-delay-2">
+        <div class="card-header">
+          <h3 class="card-title">Semester Performance</h3>
+          <a
+            href="{{ url_for('halaman_grade') }}"
+            class="btn btn-primary btn-sm"
+            >View Details</a
+          >
+        </div>
+        <div class="table-container">
+          {% if semester_summary %}
+          <table>
+            <thead>
+              <tr>
+                <th>Semester</th>
+                <th>IPS</th>
+                <th>Total SKS</th>
+                <th>Courses</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sem in semester_summary %}
+              <tr>
+                <td><strong>Semester {{ sem.semester }}</strong></td>
+                <td>{{ sem.ips }}</td>
+                <td>{{ sem.total_sks }} SKS</td>
+                <td>{{ sem.total_mk }} Mata Kuliah</td>
+                <td>
+                  {% if sem.ips >= 3.5 %}
+                  <span class="badge badge-success">Excellent</span>
+                  {% elif sem.ips >= 3.0 %}
+                  <span class="badge badge-info">Good</span>
+                  {% elif sem.ips >= 2.5 %}
+                  <span class="badge badge-warning">Average</span>
+                  {% else %}
+                  <span class="badge badge-danger">Needs Improvement</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <div
+            style="text-align: center; padding: 40px; color: var(--text-muted)"
+          >
+            <p>No grades recorded yet.</p>
+            <a
+              href="{{ url_for('tambah_nilai') }}"
+              class="btn btn-primary"
+              style="margin-top: 16px"
+              >Add First Grade</a
+            >
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card fade-in fade-in-delay-3">
+        <div class="card-header">
+          <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div style="display: flex; gap: 16px; flex-wrap: wrap">
+          <a href="{{ url_for('tambah_nilai') }}" class="btn btn-success">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              />
+            </svg>
+            Add New Grade
+          </a>
+          <a href="{{ url_for('halaman_grade') }}" class="btn btn-secondary">
+            View All Grades
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Chart.js Script -->
+    <script>
+      // Data embedded directly from Jinja2 - no JSON parsing needed
+      var chartGrades = {{ grade_dist|tojson|safe }};
+      var chartSemesters = {{ semester_summary|tojson|safe }};
+
+      document.addEventListener('DOMContentLoaded', function() {
+        // Check if Chart.js is loaded
+        if (typeof Chart === 'undefined') {
+          console.error('Chart.js not loaded');
+          return;
+        }
+
+        // Chart 1: Grade Distribution (Doughnut)
+        var ctx1 = document.getElementById('gradeDistChart');
+        if (ctx1) {
+          var gradeLabels = ['A', 'AB', 'B', 'BC', 'C', 'D', 'E'];
+          var gradeData = gradeLabels.map(function(l) { return chartGrades[l] || 0; });
+
+          new Chart(ctx1, {
+            type: 'doughnut',
+            data: {
+              labels: gradeLabels,
+              datasets: [{
+                data: gradeData,
+                backgroundColor: ['#10b981', '#34d399', '#3b82f6', '#60a5fa', '#f59e0b', '#fbbf24', '#ef4444'],
+                borderWidth: 2,
+                borderColor: '#fff'
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { position: 'bottom', labels: { padding: 15, font: { size: 12 } } }
+              },
+              cutout: '60%'
+            }
+          });
+        }
+
+        // Chart 2: GPA Progress (Line)
+        var ctx2 = document.getElementById('gpaProgressChart');
+        if (ctx2 && chartSemesters.length > 0) {
+          new Chart(ctx2, {
+            type: 'line',
+            data: {
+              labels: chartSemesters.map(function(s) { return 'Sem ' + s.semester; }),
+              datasets: [{
+                label: 'IPS',
+                data: chartSemesters.map(function(s) { return s.ips; }),
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#3b82f6',
+                pointBorderWidth: 2,
+                pointRadius: 5
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { min: 0, max: 4, ticks: { stepSize: 1 }, grid: { color: '#f1f5f9' } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+        }
+
+        // Chart 3: SKS per Semester (Bar)
+        var ctx3 = document.getElementById('sksBarChart');
+        if (ctx3 && chartSemesters.length > 0) {
+          new Chart(ctx3, {
+            type: 'bar',
+            data: {
+              labels: chartSemesters.map(function(s) { return 'Sem ' + s.semester; }),
+              datasets: [{
+                label: 'SKS',
+                data: chartSemesters.map(function(s) { return s.total_sks; }),
+                backgroundColor: '#f59e0b',
+                borderRadius: 6,
+                barPercentage: 0.6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+        }
+
+        // Chart 4: Courses per Semester (Line)
+        var ctx4 = document.getElementById('coursesLineChart');
+        if (ctx4 && chartSemesters.length > 0) {
+          new Chart(ctx4, {
+            type: 'line',
+            data: {
+              labels: chartSemesters.map(function(s) { return 'Sem ' + s.semester; }),
+              datasets: [{
+                label: 'Courses',
+                data: chartSemesters.map(function(s) { return s.total_mk; }),
+                borderColor: '#8b5cf6',
+                backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#fff',
+                pointBorderColor: '#8b5cf6',
+                pointBorderWidth: 3,
+                pointRadius: 6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                x: { grid: { display: false } }
+              }
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creator Biography | 4in Sight</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/logo.png') }}"
+    />
+    <style>
+      .profile-img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid var(--primary);
+        margin-bottom: 24px;
+        box-shadow: var(--shadow-lg);
+      }
+      .bio-list {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+      }
+      .bio-list li {
+        padding: 12px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .bio-list li:last-child {
+        border-bottom: none;
+      }
+      .social-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        background: white;
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        font-weight: 500;
+        transition: var(--transition);
+      }
+      .social-link:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <div class="sidebar-brand">
+        <img
+          src="{{ url_for('static', filename='images/logo.png') }}"
+          alt="Logo"
+        />
+      </div>
+      <ul class="nav-links">
+        <li>
+          <a href="{{ url_for('dashboard') }}" class="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+              />
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('halaman_grade') }}" class="nav-item">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              />
+            </svg>
+            <span>Grades</span>
+          </a>
+        </li>
+        <li>
+          <a href="{{ url_for('about') }}" class="nav-item active">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>About</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="{{ url_for('logout_route') }}"
+            class="nav-item"
+            style="color: var(--error)"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+      <div class="sidebar-footer">
+        <p>&copy; 2025 4in Sight</p>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="welcome-section fade-in" style="text-align: center">
+        <a
+          href="{{ url_for('about') }}"
+          class="btn btn-secondary btn-sm"
+          style="margin-bottom: 24px"
+          >← Back to About</a
+        >
+        <h1>Creator <span class="bg-gradient-text">Profile</span></h1>
+        <p class="text-muted">Meet the mind behind 4in Sight</p>
+      </div>
+
+      <div class="row" style="max-width: 800px; margin: 0 auto">
+        <!-- Profile Info -->
+        <div class="card fade-in fade-in-delay-1" style="text-align: center">
+          <img
+            src="{{ url_for('static', filename='aku.jpg') }}"
+            onerror="
+              this.src =
+                'https://ui-avatars.com/api/?name=Ghifar&background=random&size=150'
+            "
+            alt="Ghifar"
+            class="profile-img"
+          />
+          <h2 style="margin-bottom: 4px">ILHAM TAUFIQ GHIFARI</h2>
+          <p class="text-muted" style="color: var(--primary)">
+            Data Science Student
+          </p>
+
+          <p
+            style="margin-top: 16px; line-height: 1.8; color: var(--text-muted)"
+          >
+            My name is Ilham Taufiq Ghifari, and I am a Data Science student at
+            ULBI. I have a strong passion for both art and data analysis, which
+            inspires me to combine creativity with technical skills in my work
+            and studies.
+          </p>
+
+          <div
+            style="
+              margin-top: 24px;
+              display: flex;
+              justify-content: center;
+              gap: 12px;
+              flex-wrap: wrap;
+            "
+          >
+            <a
+              href="https://www.linkedin.com/in/itghifari//"
+              target="_blank"
+              class="social-link"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://www.instagram.com/ghifarroo/"
+              target="_blank"
+              class="social-link"
+            >
+              Instagram
+            </a>
+            <a
+              href="https://youtube.com/@ghifaro?si=W1Dg4iyKrPGeavbg"
+              target="_blank"
+              class="social-link"
+            >
+              YouTube
+            </a>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="card fade-in fade-in-delay-2">
+          <div class="card-header">
+            <h3 class="card-title">My Skills</h3>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px">
+            <span
+              class="badge badge-info"
+              style="font-size: 0.9rem; padding: 10px 16px"
+              >Python Programming 📟</span
+            >
+            <span
+              class="badge badge-info"
+              style="font-size: 0.9rem; padding: 10px 16px"
+              >Data Analysis 📈</span
+            >
+            <span
+              class="badge badge-info"
+              style="font-size: 0.9rem; padding: 10px 16px"
+              >Machine Learning ⚙️</span
+            >
+            <span
+              class="badge badge-info"
+              style="font-size: 0.9rem; padding: 10px 16px"
+              >Data Visualization 📊</span
+            >
+            <span
+              class="badge badge-info"
+              style="font-size: 0.9rem; padding: 10px 16px"
+              >Statistical Analysis 📉</span
+            >
+            <span
+              class="badge badge-info"
+              style="font-size: 0.9rem; padding: 10px 16px"
+              >Content Design 🎨</span
+            >
+          </div>
+        </div>
+
+        <!-- Education -->
+        <div class="card fade-in fade-in-delay-3">
+          <div class="card-header">
+            <h3 class="card-title">Education Background</h3>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Level</th>
+                  <th>Institution</th>
+                  <th>Year</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Elementary</td>
+                  <td>SD Kristen Kalam Kudus</td>
+                  <td>2016</td>
+                </tr>
+                <tr>
+                  <td>Middle School</td>
+                  <td>SMP Santa Maria Bandung</td>
+                  <td>2019</td>
+                </tr>
+                <tr>
+                  <td>High School</td>
+                  <td>SMA Pasundan 1 Bandung</td>
+                  <td>2022</td>
+                </tr>
+                <tr>
+                  <td>University</td>
+                  <td>Universitas Logistik dan Bisnis Internasional</td>
+                  <td>Present</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="4in Sight - Student Academic Analyzer | Create Account"
+    />
+    <title>Sign Up | 4in Sight</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='images/logo.png') }}"
+    />
+  </head>
+  <body>
+    <div class="auth-page">
+      <!-- Left Side - Branding -->
+      <div class="auth-left">
+        <!-- OPTION 1: Glowing Orbs Animation (Default) -->
+        <div class="bg-orbs">
+          <div class="orb orb-1"></div>
+          <div class="orb orb-2"></div>
+          <div class="orb orb-3"></div>
+        </div>
+
+        <!-- OPTION 2: Digital Grid (To use, comment out bg-orbs above and uncomment below) -->
+        <!-- 
+        <div class="bg-grid">
+            <div class="grid-moving"></div>
+        </div> 
+        -->
+
+        <!-- OPTION 3: Ocean Waves (To use, comment out above and uncomment below) -->
+        <!-- 
+        <div class="bg-waves">
+            <div class="wave wave-1"></div>
+            <div class="wave wave-2"></div>
+            <div class="wave wave-3"></div>
+        </div> 
+        -->
+        <div class="auth-left-content fade-in">
+          <img
+            src="{{ url_for('static', filename='images/logo.png') }}"
+            alt="4in Sight Logo"
+          />
+          <h1>Join <span class="text-gradient">4in Sight</span></h1>
+          <p>
+            Start your journey to academic excellence. Register now to track
+            your grades and monitor your progress.
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Side - Signup Form -->
+      <div class="auth-right">
+        <div class="auth-form-container fade-in fade-in-delay-1">
+          <h2>Create Account</h2>
+          <p class="subtitle">Complete your details to register</p>
+
+          <!-- Flash Messages -->
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %} {% endif %} {% endwith %}
+
+          <form method="POST" action="{{ url_for('signup') }}">
+            <div class="form-group">
+              <label class="form-label" for="nim">NIM (Student ID)</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nim"
+                name="nim"
+                placeholder="Enter your Student ID"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="nama">Full Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nama"
+                name="nama"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="email">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                placeholder="Enter your email address"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="password">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Create a password"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirm_password"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="confirm_password"
+                name="confirm_password"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+              Register Account
+            </button>
+          </form>
+
+          <div style="text-align: center; margin-top: 24px">
+            <p style="color: var(--gray-500)">
+              Already have an account?
+              <a href="{{ url_for('login') }}" style="font-weight: 600"
+                >Login here</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
